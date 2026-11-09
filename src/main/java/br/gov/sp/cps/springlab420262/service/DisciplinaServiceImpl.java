@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
@@ -57,6 +58,7 @@ public class DisciplinaServiceImpl implements DisciplinaService {
     }
 
     @Override
+    @PreAuthorize("isAuthenticated()")
     public Disciplina buscarPorId(Long id) {
         if(id == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O ID não pode ser nulo.");
@@ -72,6 +74,7 @@ public class DisciplinaServiceImpl implements DisciplinaService {
 
     @Override
     @Transactional
+    @PreAuthorize("hasAnyRole('admin', 'user')")
     public void matricularAluno(Long disciplinaId, Long alunoId) {
         Disciplina disciplina = buscarPorId(disciplinaId);
         Aluno aluno = alunoService.buscarPorId(alunoId);
